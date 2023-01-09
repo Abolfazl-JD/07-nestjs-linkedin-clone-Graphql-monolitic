@@ -1,0 +1,101 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ConnectionRequest {
+  id: Int
+  status: String!
+  creator: User
+  reciever: User
+}
+
+type Conversation {
+  id: Int!
+  lastUpdate: DateTime!
+  users: [User!]
+  messages: [Message!]
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Message {
+  id: Int!
+  text: String!
+  createdAt: String!
+  user: User!
+}
+
+type User {
+  id: Int!
+  firstName: String
+  lastName: String!
+  email: String!
+  password: String!
+  role: Role!
+  imagePath: String
+  client_id: String
+  jwtToken: String!
+  sentConnectRequests: [ConnectionRequest!]
+  recievedConnectRequests: [ConnectionRequest!]
+  messages: [Message!]
+  conversations: [Conversation!]
+}
+
+"""The basic directions"""
+enum Role {
+  USER
+  PREMIUM
+  ADMIN
+}
+
+type Feed {
+  id: Int!
+  body: String
+  createdAt: DateTime!
+  author: User!
+}
+
+type Query {
+  feeds(getFeedsInput: GetFeedsInput!): [Feed!]!
+  user(id: Int!): User!
+  connectionRequest(recieverId: Int!): String
+  connectionRequests: [ConnectionRequest!]!
+  friends: [User!]!
+  conversation(friendId: Int!): Conversation
+  allUserConversations: [Conversation!]!
+}
+
+input GetFeedsInput {
+  skip: Int
+  take: Int
+}
+
+type Mutation {
+  createFeed(createFeedInput: CreateFeedInput!): Feed!
+  updateFeed(id: Int!, body: String!): Feed!
+  deleteFeed(id: Int!): String!
+  registerUser(createUserInput: CreateUserInput!): User!
+  loginUser(loginUserInput: LoginUserInput!): User!
+  sendConnectRequest(recieverId: Int!): ConnectionRequest!
+  updateConnectStatus(id: Int!, status: String!): ConnectionRequest!
+  createNewConversation(friendId: Int!): Conversation!
+}
+
+input CreateFeedInput {
+  body: String!
+}
+
+input CreateUserInput {
+  firstName: String
+  lastName: String!
+  email: String!
+  password: String!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
